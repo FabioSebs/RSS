@@ -6,3 +6,6 @@ environment:
 
 venv:
 	cd rss/bin && source ./activate
+
+install:
+	pip install -r requirements.txt 
