@@ -8,10 +8,15 @@
 
 ---
 
-**Ministries** ([List](https://www.dpr.go.id/en/index/link))
+**Ministries** 
 
 - [Ministry of Energy and Mineral Resources](https://www.esdm.go.id/)
+    - [Reports](https://www.esdm.go.id/id/publikasi/lain-lain)
+
 - [Ministry of Transportation](https://www.dephub.go.id)
+    - [Publications](https://www.dephub.go.id/post/kategori/publikasi-daftar-publikasi)
+    - [Booklet](https://www.dephub.go.id/post/kategori/publikasi-booklet)
+    - [News Letter](https://dephub.go.id/post/kategori/publikasi-newsletter)
 
 
 ## Information

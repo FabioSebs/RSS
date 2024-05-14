@@ -4,6 +4,7 @@ from typing import Dict
 import xml.etree.ElementTree as ET
 import os
 from scraper.moe import MOEScraper
+from scraper.mot import MOTScraper
 
 app = FastAPI()
 
@@ -34,7 +35,7 @@ async def read_xml():
 
 @app.get("/xml/mot", response_class=Response)
 async def read_xml():
-    scraper = MOEScraper(fname="mot", url="https://www.dephub.go.id")
+    scraper = MOTScraper(fname="mot", url="https://www.dephub.go.id")
     # Logic for xml, scraping, and serving xmx
     
     # Define the path to the XML file
