@@ -22,5 +22,5 @@ COPY --from=build /app/rssgen .
 COPY --from=build /app/.env .
 COPY --from=build /app/rss_feed.xml .
 
-EXPOSE 8000
+EXPOSE 8080
 ENTRYPOINT [ "/app/rssgen" ]
