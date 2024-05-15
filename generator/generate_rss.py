@@ -3,7 +3,7 @@ from feedgen.feed import FeedGenerator
 # RSS GEN CLASS
 class RSSGenerator:
     def __init__(self) -> None:
-        self.site = []
+        self.feed = FeedGenerator()
         pass
 
     def add_sites(self, *args):

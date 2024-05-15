@@ -16,9 +16,6 @@ async def root():
 
 @app.get("/xml/moe", response_class=Response)
 async def read_xml():
-    scraper = MOEScraper(fname="moe", url="https://www.esdm.go.id/")
-    # Logic for xml, scraping, and serving xmx
-    
     # Define the path to the XML file
     file_path = f"moe.xml"
     
@@ -56,4 +53,6 @@ async def read_xml():
 # Run the application using `uvicorn`
 if __name__ == "__main__":
     import uvicorn
+    scraper = MOEScraper(fname="moe", url="https://www.esdm.go.id/id/publikasi/lain-lain")
+    scraper.run()
     uvicorn.run(app, host="127.0.0.1", port=8000)
