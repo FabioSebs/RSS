@@ -84,7 +84,7 @@ func (g *MoeScraper) CollectorSetup() *colly.Collector {
 			output = []byte(xml.Header + string(output))
 
 			// Write XML to file
-			file, err := os.Create("rss_feed.xml")
+			file, err := os.Create("moe.xml")
 			if err != nil {
 				fmt.Println("Error creating file:", err)
 				return

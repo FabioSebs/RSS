@@ -10,7 +10,7 @@ import (
 // Handler
 func GetMoeXML(c echo.Context) error {
 	// Read the XML file
-	data, err := ioutil.ReadFile("rss_feed.xml")
+	data, err := ioutil.ReadFile("moe.xml")
 	if err != nil {
 		return c.String(http.StatusInternalServerError, "Error reading XML file")
 	}
@@ -18,4 +18,8 @@ func GetMoeXML(c echo.Context) error {
 	// Set the content type to application/xml
 	c.Response().Header().Set(echo.HeaderContentType, echo.MIMEApplicationXML)
 	return c.String(http.StatusOK, string(data))
+}
+
+func GetMotXML(c echo.Context) error {
+	return nil
 }

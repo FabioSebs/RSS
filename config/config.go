@@ -10,11 +10,16 @@ type Domains struct {
 	MoE []string
 	MoT []string
 	//append more here
+}
 
+type Filenames struct {
+	MoE string
+	MoT string
 }
 
 type Config struct {
-	Sites      Domains
+	Sites Domains
+	Filenames
 	ICCTEmail  string
 	ICCTAuthor string
 }
@@ -30,13 +35,18 @@ func NewConfig() Config {
 			os.Getenv("domain.moe.allowed5"),
 			os.Getenv("domain.moe.allowed6"),
 		},
-
 		MoT: []string{os.Getenv("domain.mot")},
 		//append more here
 	}
 
+	filenames := Filenames{
+		MoE: "moe.xml",
+		MoT: "mot.xml",
+	}
+
 	return Config{
 		Sites:      domains,
+		Filenames:  filenames,
 		ICCTEmail:  os.Getenv("icct.email"),
 		ICCTAuthor: os.Getenv("icct.author"),
 	}

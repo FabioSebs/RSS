@@ -25,16 +25,19 @@
 
 **XML** - It's a markup language similar to HTML, but **whereas HTML is designed to display data, XML is designed to store and transport data**. XML is widely used for storing and exchanging structured data between different systems, such as web services, databases, and applications
 
+**OPML** - OPML is a way to bundle many RSS feeds in one file to easily share among others 
+
 ## Challenges
 
-**Problem** - the websites we need to get the XML from don't support RSS and will have to be generated periodicially and manually! In order to do so we will be ....
+**Problem** - the websites we need to get the XML from **don't support RSS** and will have to be generated periodicially! In order to do so we will be ....
 
 **Solution** - creating a scraper that automatically generates the xml for all of the sites by parsing the data! Once generated the XML will be hosted on a web server for consumption by feedly. This will allow for a url to be given and read by our RSS Reader (Feedly)
 
 
 ## Methodology
 
-**RSS Reader** - for this project we will use Feedly! Users can easily subscribe to RSS feeds by entering the **URL of the website**. If this url is supported by feedly it automatically will generate the XML. Since the sites we are interested in do **NOT** support RSS natively I will create the scraper and xml generator.
+**Feedly** - this will be the RSS reader of my choice unless we choose to have a self-hosted one. Simply upload the OPML file into Feedly and should see all of the feeds.
+
 
 **WebScraper** - The scraper can go into any website that has **wanted information** such as 
 

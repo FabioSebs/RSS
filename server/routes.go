@@ -3,12 +3,14 @@ package server
 import "github.com/labstack/echo/v4"
 
 func SetRoutes(server *echo.Echo) {
-	v1 := server.Group("/v1/icct") //append middlewares here
+	v1 := server.Group("/v1") //append middlewares here
 	{
-		moe := v1.Group("/moe")
+		rss := v1.Group("/rss")
 		{
-			moe.GET("/xml", GetMoeXML)
+			rss.GET("/moe", GetMoeXML)
+			rss.GET("/mot", GetMotXML)
 		}
+
 	}
 
 }
