@@ -19,10 +19,10 @@ import (
 var (
 	counter   int      = 0
 	filenames []string = []string{
-		"reg_presiden.xml",
-		"reg_pemerintah.xml",
-		"reg_menteri.xml",
-		"reg_geburnur.xml",
+		"xml/reg_presiden.xml",
+		"xml/reg_pemerintah.xml",
+		"xml/reg_menteri.xml",
+		"xml/reg_geburnur.xml",
 	}
 )
 

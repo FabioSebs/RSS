@@ -86,6 +86,10 @@ func (g *MoeScraper) CollectorSetup() *colly.Collector {
 	return g.Collector
 }
 func (g *MoeScraper) WriteXML(rss entities.RSS) error {
+	var (
+		filename string = fmt.Sprintf("xml/%s", g.Config.Filenames.MoE)
+	)
+
 	output, err := xml.MarshalIndent(rss, "", "  ")
 	if err != nil {
 		fmt.Println("Error marshaling XML:", err)
@@ -96,7 +100,7 @@ func (g *MoeScraper) WriteXML(rss entities.RSS) error {
 	output = []byte(xml.Header + string(output))
 
 	// Write XML to file
-	file, err := os.Create(g.Config.Filenames.MoE)
+	file, err := os.Create(filename)
 	if err != nil {
 		fmt.Println("Error creating file:", err)
 		return err

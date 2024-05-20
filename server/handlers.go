@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -11,7 +12,7 @@ import (
 func GetXML(c echo.Context) error {
 	var (
 		name     string = c.Param("filename")
-		filename string = name + ".xml"
+		filename string = fmt.Sprintf("xml/%s.xml", name)
 	)
 
 	// Read the XML file
