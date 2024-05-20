@@ -1,19 +1,13 @@
 package main
 
 import (
-	"github.com/FabioSebs/RSS/scraper"
+	"github.com/FabioSebs/RSS/scheduler/jobs"
+	"github.com/FabioSebs/RSS/server"
 )
 
 func main() {
-	mot := scraper.NewMoTScraper()
-	mot.LaunchScraper(mot.CollectorSetup())
-
-	moe := scraper.NewMoeScraper()
-	moe.LaunchScraper(moe.CollectorSetup())
-
-	reg := scraper.NewRegScraper()
-	reg.LaunchScraper(reg.CollectorSetup())
-	// server.RunServer()
+	jobs.RunScraper()
+	server.RunServer()
 }
 
 // TODO: Regen on request or cron job + cli command

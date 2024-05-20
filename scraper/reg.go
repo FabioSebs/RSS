@@ -5,12 +5,25 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"regexp"
+	"strings"
 	"time"
 
 	"github.com/FabioSebs/RSS/config"
 	"github.com/FabioSebs/RSS/entities"
 	"github.com/FabioSebs/RSS/generator"
 	"github.com/gocolly/colly"
+	"golang.org/x/net/html"
+)
+
+var (
+	counter   int      = 0
+	filenames []string = []string{
+		"reg_presiden.xml",
+		"reg_pemerintah.xml",
+		"reg_menteri.xml",
+		"reg_geburnur.xml",
+	}
 )
 
 type RegScraper struct {
@@ -34,16 +47,16 @@ func NewRegScraper() WebScraper {
 }
 
 func (g *RegScraper) CollectorSetup() *colly.Collector {
-	g.Collector.OnHTML("div.widget ul.comments-list", func(element *colly.HTMLElement) {
+	g.Collector.OnHTML("div.app-container div.rounded-4", func(element *colly.HTMLElement) {
 		var (
 			pubTime time.Time = time.Now()
 
 			rss entities.RSS = entities.RSS{
 				Version: "2.0",
 				Channel: entities.Channel{
-					Title:          "Ministry of Transportation",
+					Title:          "Database of Regulations (ID)",
 					Link:           g.Config.Domains.Reg[0],
-					Description:    "Reports",
+					Description:    "Regulations",
 					ManagingEditor: g.Config.ICCTAuthor,
 					PubDate:        pubTime,
 					Items:          nil, // needs scraping
@@ -52,12 +65,12 @@ func (g *RegScraper) CollectorSetup() *colly.Collector {
 		)
 
 		// add items to rss / scrape data
-		element.ForEach("li", func(i int, h *colly.HTMLElement) {
+		element.ForEach("div.row.mb-8 div.col-12 div.card div.card-body div.flex-grow-1", func(i int, h *colly.HTMLElement) {
 			var (
 				item entities.Item = entities.Item{
-					Title:       h.ChildText("h3"),
-					Link:        h.ChildAttr("h3 a", "href"),
-					Description: h.ChildText("small"),
+					Title:       h.ChildText("div.row.g-4.g-xl-9.mb-4 div.col-lg-8"),
+					Link:        h.ChildAttr("a", "href"),
+					Description: cleanString(h.ChildText("a")),
 					PubDate:     time.Now(),
 				}
 			)
@@ -97,7 +110,7 @@ func (g *RegScraper) WriteXML(rss entities.RSS) error {
 	output = []byte(xml.Header + string(output))
 
 	// Write XML to file
-	file, err := os.Create(g.Config.Filenames.ReG)
+	file, err := os.Create(filenames[counter])
 	if err != nil {
 		fmt.Println("Error creating file:", err)
 		return err
@@ -115,9 +128,44 @@ func (g *RegScraper) WriteXML(rss entities.RSS) error {
 }
 
 func (g *RegScraper) LaunchScraper(collector *colly.Collector) {
-	if err := collector.Visit(g.Config.Domains.Reg[0]); err != nil {
-		fmt.Println("error occured: " + err.Error())
+	for idx := 0; idx < 4; idx++ {
+		if err := collector.Visit(g.Config.Domains.Reg[idx]); err != nil {
+			fmt.Println("error occured: " + err.Error())
+		}
+		counter++
 	}
-	// Ensuring that the scraping process completes before the program exits
+
+	counter = 0
 	collector.Wait()
+}
+
+func extractTextFromXML(xmlContent string) string {
+	// Parse the XML content
+	doc, err := html.Parse(strings.NewReader(xmlContent))
+	if err != nil {
+		panic("Failed to parse XML content")
+	}
+
+	var descriptionText string
+	var f func(*html.Node)
+	f = func(n *html.Node) {
+		if n.Type == html.TextNode && n.Parent.Data == "description" {
+			descriptionText = n.Data
+		}
+		for c := n.FirstChild; c != nil; c = c.NextSibling {
+			f(c)
+		}
+	}
+	f(doc)
+
+	return descriptionText
+}
+
+func cleanString(s string) string {
+	// Remove HTML entities, newlines, tabs, and extra spaces
+	re := regexp.MustCompile(`&#xA;|\n|\t`)
+	s = re.ReplaceAllString(s, " ")
+	s = strings.TrimSpace(s)
+	s = strings.Join(strings.Fields(s), " ") // Replace multiple spaces with a single space
+	return s
 }

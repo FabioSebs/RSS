@@ -18,9 +18,10 @@ type Config struct {
 
 func NewConfig() Config {
 	return Config{
-		Domains:    utils.GetDomains(),
-		Filenames:  utils.GetFilenames(),
-		ICCTEmail:  os.Getenv("icct.email"),
-		ICCTAuthor: os.Getenv("icct.author"),
+		Domains:       utils.GetDomains(),
+		PermittedURLs: utils.GetAllowedDomains(),
+		Filenames:     utils.GetFilenames(),
+		ICCTEmail:     os.Getenv("icct.email"),
+		ICCTAuthor:    os.Getenv("icct.author"),
 	}
 }
