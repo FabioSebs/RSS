@@ -27,7 +27,7 @@ func NewRssGenerator() RSSGenerator {
 func (r *RSSGenerator) InitializeMoEFeed() *feedhub.Feed {
 	feed := &feedhub.Feed{
 		Title:       "Ministry of Energy",
-		Link:        &feedhub.Link{Href: r.Config.Sites.MoE[0]},
+		Link:        &feedhub.Link{Href: r.Config.Domains.MoE},
 		Description: "reports of the MoE",
 		Author: &feedhub.Author{
 			Name:  r.Config.ICCTAuthor,

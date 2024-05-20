@@ -7,8 +7,7 @@ func SetRoutes(server *echo.Echo) {
 	{
 		rss := v1.Group("/rss")
 		{
-			rss.GET("/moe", GetMoeXML)
-			rss.GET("/mot", GetMotXML)
+			rss.GET("/:filename", GetXML)
 		}
 
 	}
