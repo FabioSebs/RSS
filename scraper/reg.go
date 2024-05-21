@@ -13,7 +13,6 @@ import (
 	"github.com/FabioSebs/RSS/entities"
 	"github.com/FabioSebs/RSS/generator"
 	"github.com/gocolly/colly"
-	"golang.org/x/net/html"
 )
 
 var (
@@ -23,6 +22,14 @@ var (
 		"xml/reg_pemerintah.xml",
 		"xml/reg_menteri.xml",
 		"xml/reg_geburnur.xml",
+	}
+
+	excel   generator.ExcelGen = generator.NewExcelGen()
+	columns []string           = []string{
+		"Title",
+		"Link",
+		"Status",
+		"PDF",
 	}
 )
 
@@ -69,12 +76,20 @@ func (g *RegScraper) CollectorSetup() *colly.Collector {
 			var (
 				item entities.Item = entities.Item{
 					Title:       h.ChildText("div.row.g-4.g-xl-9.mb-4 div.col-lg-8"),
-					Link:        h.ChildAttr("a", "href"),
+					Link:        g.Config.PermittedURLs.Reg[2] + h.ChildAttr("a", "href"),
 					Description: cleanString(h.ChildText("a")),
 					PubDate:     time.Now(),
 				}
+
+				excelRow []string = []string{
+					item.Title,
+					item.Link,
+					h.ChildText("div div.row.g-4.g-xl-9.mb-4 div.col-lg-2 span"),
+					g.Config.PermittedURLs.Reg[2] + h.ChildAttr("div.border-top.border-gray-300.pt-4.mt-4 div.row.g-4.g-xl-9 div ul li a", "href"),
+				}
 			)
 
+			excel.SetValues(i+2, counter+1, excelRow) // (rowNo, sheetNo, values)
 			rss.Channel.Items = append(rss.Channel.Items, item)
 		})
 
@@ -83,6 +98,8 @@ func (g *RegScraper) CollectorSetup() *colly.Collector {
 				log.Fatal(err)
 			}
 		}
+
+		excel.NewSheet(fmt.Sprintf("Sheet%d", counter+2)) // have sheet 5 but its ok
 	})
 
 	// Request Feedback
@@ -128,37 +145,19 @@ func (g *RegScraper) WriteXML(rss entities.RSS) error {
 }
 
 func (g *RegScraper) LaunchScraper(collector *colly.Collector) {
-	for idx := 0; idx < 4; idx++ {
+	excel.NewSheet("Sheet1")
+
+	for idx := 0; idx < len(g.Config.Domains.Reg); idx++ {
+		excel.SetColumns(idx+1, columns)
 		if err := collector.Visit(g.Config.Domains.Reg[idx]); err != nil {
 			fmt.Println("error occured: " + err.Error())
 		}
-		counter++
+		counter++ // 0-3
 	}
 
 	counter = 0
+	excel.SaveFile("regulations.xlsx")
 	collector.Wait()
-}
-
-func extractTextFromXML(xmlContent string) string {
-	// Parse the XML content
-	doc, err := html.Parse(strings.NewReader(xmlContent))
-	if err != nil {
-		panic("Failed to parse XML content")
-	}
-
-	var descriptionText string
-	var f func(*html.Node)
-	f = func(n *html.Node) {
-		if n.Type == html.TextNode && n.Parent.Data == "description" {
-			descriptionText = n.Data
-		}
-		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			f(c)
-		}
-	}
-	f(doc)
-
-	return descriptionText
 }
 
 func cleanString(s string) string {
