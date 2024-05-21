@@ -17,10 +17,11 @@ FROM alpine:3.13
 
 WORKDIR /app
 
+RUN mkdir xml
 # Copy only necessary files from the build stage
 COPY --from=build /app/rssgen .
 COPY --from=build /app/.env .
-COPY --from=build /app/rss_feed.xml .
+COPY --from=build /app/xml/ ./xml/
 
 EXPOSE 8080
 ENTRYPOINT [ "/app/rssgen" ]
