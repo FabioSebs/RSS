@@ -29,7 +29,7 @@ func SendRequestForEmail() {
 
 	emailBytes := bytes.NewBuffer(emailJSON)
 
-	req, _ := http.NewRequest(http.MethodPost, "http://notifications:6000/v1/email", emailBytes)
+	req, _ := http.NewRequest(http.MethodPost, "http://notifications:6000/v1/email?type=scrape", emailBytes)
 	// Call the `Do` method, which has a similar interface to the `http.Do` method
 	res, err := client.Do(req)
 	if err != nil {
