@@ -3,6 +3,7 @@ package httpclient
 import (
 	"bytes"
 	"encoding/json"
+	"log"
 	"net/http"
 
 	"github.com/FabioSebs/RSS/config"
@@ -29,9 +30,22 @@ func SendRequestForEmail() {
 
 	emailBytes := bytes.NewBuffer(emailJSON)
 
-	req, _ := http.NewRequest(http.MethodPost, "http://notifications:6000/v1/email?type=scrape", emailBytes)
+	req, err := http.NewRequest(http.MethodPost, "http://notifications:6000/v1/email?type=scrape", emailBytes)
+	if err != nil {
+		log.Println("Oh no request went wrong!")
+		log.Println(err.Error())
+	}
 	// Call the `Do` method, which has a similar interface to the `http.Do` method
-	res, _ := client.Do(req)
+
+	req.Header.Set("Content-Type", "application/json")
+
+	res, err := client.Do(req)
+	if err != nil {
+		log.Println("Oh no request went wrong!")
+		log.Println(err.Error())
+	}
+
+	log.Println("Email request sent successfully")
 	defer res.Body.Close()
 
 }
