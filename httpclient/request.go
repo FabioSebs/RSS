@@ -1,13 +1,12 @@
 package httpclient
 
 import (
-	"bytes"
-	"encoding/json"
+	"fmt"
 	"log"
-	"net/http"
 
 	"github.com/FabioSebs/RSS/config"
-	"github.com/gojek/heimdall/v7/httpclient"
+	// Import resty into your code and refer it as `resty`.
+	"github.com/go-resty/resty/v2"
 )
 
 type Email struct {
@@ -15,37 +14,23 @@ type Email struct {
 }
 
 func SendRequestForEmail() {
-	client := httpclient.NewClient()
-	// Create an http.Request instance
-	// Create the Email instance
-	email := Email{
-		Recipients: config.GetAllRecipients(), // Adjust as necessary
-	}
+	var (
+		request Email = Email{
+			Recipients: config.GetAllRecipients(),
+		}
 
-	// Marshal the Email struct to JSON
-	emailJSON, err := json.Marshal(email)
-	if err != nil {
-		panic(err)
-	}
+		client = resty.New()
+		err    error
+	)
 
-	emailBytes := bytes.NewBuffer(emailJSON)
+	resp, err := client.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(request).
+		Post("http://notifications:6000/v1/email?type=scrape")
 
-	req, err := http.NewRequest(http.MethodPost, "http://notifications:6000/v1/email?type=scrape", emailBytes)
-	if err != nil {
-		log.Println("Oh no request went wrong!")
-		log.Println(err.Error())
-	}
-	// Call the `Do` method, which has a similar interface to the `http.Do` method
-
-	req.Header.Set("Content-Type", "application/json")
-
-	res, err := client.Do(req)
-	if err != nil {
-		log.Println("Oh no request went wrong!")
-		log.Println(err.Error())
+	if resp == nil {
+		fmt.Println(err.Error())
 	}
 
 	log.Println("Email request sent successfully")
-	defer res.Body.Close()
-
 }
