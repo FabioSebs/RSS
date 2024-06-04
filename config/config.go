@@ -25,3 +25,10 @@ func NewConfig() Config {
 		ICCTAuthor:    os.Getenv("icct.author"),
 	}
 }
+
+func GetAllRecipients() []string {
+	return []string{
+		"fabrzytech@gmail.com",
+		"sebsphotosofficial@gmail.com",
+	}
+}

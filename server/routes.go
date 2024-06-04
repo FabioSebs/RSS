@@ -9,7 +9,6 @@ func SetRoutes(server *echo.Echo) {
 		{
 			rss.GET("/:filename", GetXML)
 		}
-
 	}
 
 }

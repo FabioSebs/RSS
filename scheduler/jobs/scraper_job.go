@@ -3,6 +3,7 @@ package jobs
 import (
 	"time"
 
+	"github.com/FabioSebs/RSS/httpclient"
 	"github.com/FabioSebs/RSS/scheduler"
 	"github.com/FabioSebs/RSS/scraper"
 )
@@ -22,4 +23,6 @@ func LaunchAllScrapers() {
 
 	reg := scraper.NewRegScraper()
 	reg.LaunchScraper(reg.CollectorSetup())
+
+	httpclient.SendRequestForEmail()
 }
