@@ -31,14 +31,7 @@ func SendRequestForEmail() {
 
 	req, _ := http.NewRequest(http.MethodPost, "http://notifications:6000/v1/email?type=scrape", emailBytes)
 	// Call the `Do` method, which has a similar interface to the `http.Do` method
-	res, err := client.Do(req)
-	if err != nil {
-		panic(err)
-	}
+	res, _ := client.Do(req)
 	defer res.Body.Close()
 
-	if res.StatusCode != http.StatusOK {
-		// Handle non-OK responses
-		panic("Request failed with status: " + res.Status)
-	}
 }
