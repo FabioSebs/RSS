@@ -6,9 +6,10 @@ import (
 )
 
 type RSS struct {
-	XMLName xml.Name `xml:"rss"`
-	Version string   `xml:"version,attr"`
-	Channel Channel  `xml:"channel"`
+	XMLName    xml.Name `xml:"rss"`
+	XMLNSMedia string   `xml:"xmlns:media,attr"`
+	Version    string   `xml:"version,attr"`
+	Channel    Channel  `xml:"channel"`
 }
 
 type Channel struct {
@@ -21,8 +22,15 @@ type Channel struct {
 }
 
 type Item struct {
-	Title       string    `xml:"title"`
-	Link        string    `xml:"link"`
-	Description string    `xml:"description"`
-	PubDate     time.Time `xml:"pubDate"`
+	Title          string         `xml:"title"`
+	Link           string         `xml:"link"`
+	Description    string         `xml:"description"`
+	PubDate        time.Time      `xml:"pubDate"`
+	MediaThumbnail MediaThumbnail `xml:"media:thumbnail,omitempty"`
+}
+
+type MediaThumbnail struct {
+	URL    string `xml:"url,attr"`
+	Width  string `xml:"width,attr,omitempty"`
+	Height string `xml:"height,attr,omitempty"`
 }

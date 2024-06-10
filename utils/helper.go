@@ -16,6 +16,9 @@ func GetDomains() entities.Domains {
 			os.Getenv("domain.regulation.menteri"),
 			os.Getenv("domain.regulation.geburnur"),
 		},
+		Antara:   os.Getenv("domain.antara"),
+		Vietnam:  os.Getenv("domain.vietnam"),
+		Thailand: os.Getenv("domain.thailand"),
 	}
 }
 
@@ -45,13 +48,40 @@ func GetAllowedDomains() entities.PermittedURLs {
 			os.Getenv("domain.regulation.allowed5"),
 			os.Getenv("domain.regulation.allowed6"),
 		},
+		Antara: []string{
+			os.Getenv("domain.antara.allowed"),
+			os.Getenv("domain.antara.allowed2"),
+			os.Getenv("domain.antara.allowed3"),
+			os.Getenv("domain.antara.allowed4"),
+			os.Getenv("domain.antara.allowed5"),
+			os.Getenv("domain.antara.allowed6"),
+		},
+		Vietnam: []string{
+			os.Getenv("domain.vietnam.allowed"),
+			os.Getenv("domain.vietnam.allowed2"),
+			os.Getenv("domain.vietnam.allowed3"),
+			os.Getenv("domain.vietnam.allowed4"),
+			os.Getenv("domain.vietnam.allowed5"),
+			os.Getenv("domain.vietnam.allowed6"),
+		},
+		Thailand: []string{
+			os.Getenv("domain.thailand.allowed"),
+			os.Getenv("domain.thailand.allowed2"),
+			os.Getenv("domain.thailand.allowed3"),
+			os.Getenv("domain.thailand.allowed4"),
+			os.Getenv("domain.thailand.allowed5"),
+			os.Getenv("domain.thailand.allowed6"),
+		},
 	}
 }
 
 func GetFilenames() entities.Filenames {
 	return entities.Filenames{
-		MoE: "moe.xml",
-		MoT: "mot.xml",
-		ReG: "reg.xml",
+		MoE:      "moe.xml",
+		MoT:      "mot.xml",
+		ReG:      "reg.xml",
+		Antara:   "antara.xml",
+		Vietnam:  "vietnam.xml",
+		Thailand: "thailand.xml",
 	}
 }
