@@ -36,23 +36,23 @@ func (v *VietnamScraper) CollectorSetup() *colly.Collector {
 		Channel: entities.Channel{
 			Title:          "Vietnam News",
 			Link:           v.Config.Domains.Antara,
-			Description:    "Reports",
+			Description:    "News",
 			ManagingEditor: v.Config.ICCTAuthor,
 			PubDate:        time.Now(),
 			Items:          nil,
 		},
 	}
 
-	v.Collector.OnHTML("div.container div.list__listing div.list__flex div.list__main div.list__lflex div.list__lmain div.box-stream", func(element *colly.HTMLElement) {
-		element.ForEach("div.box-stream-item", func(i int, h *colly.HTMLElement) {
+	v.Collector.OnHTML("div.timeline", func(element *colly.HTMLElement) {
+		element.ForEach("article.story ", func(i int, h *colly.HTMLElement) {
 			var (
 				item = entities.Item{
-					Title:       h.ChildText("div.box-stream-content h2 a"),
-					Link:        v.Config.PermittedURLs.Vietnam[0] + h.ChildAttr("div.box-stream-content h2 a", "href"),
-					Description: h.ChildText("div.box-stream-content p"),
+					Title:       h.ChildText("h2 a"),
+					Link:        h.ChildAttr("a", "href"),
+					Description: h.ChildText("div.summary"),
 					PubDate:     time.Now(),
 					Enclosure: entities.Enclosure{
-						URL:  h.ChildAttr("a.box-stream-link-with-avatar img", "src"),
+						URL:  h.ChildAttr("a img", "data-src"),
 						Type: "image/jpg",
 					},
 				}
@@ -110,9 +110,19 @@ func (v *VietnamScraper) WriteXML(rss entities.RSS) error {
 }
 
 func (v *VietnamScraper) LaunchScraper(collector *colly.Collector) {
+
 	if err := v.Collector.Visit(v.Config.Domains.Vietnam); err != nil {
 		fmt.Println("error occured: " + err.Error())
 	}
+
+	for i := 2; i <= 50; i++ {
+		var url string = fmt.Sprintf("%s?p=%d", v.Config.Domains.Vietnam, i)
+		fmt.Println(url)
+		if err := v.Collector.Visit(url); err != nil {
+			fmt.Println("error occured: " + err.Error())
+		}
+	}
+
 	// Ensuring that the scraping process completes before the program exits
 	collector.Wait()
 
