@@ -32,8 +32,7 @@ func NewVietnamScraper() WebScraper {
 
 func (v *VietnamScraper) CollectorSetup() *colly.Collector {
 	v.RSS = entities.RSS{
-		Version:    "2.0",
-		XMLNSMedia: "http://search.yahoo.com/mrss/",
+		Version: "2.0",
 		Channel: entities.Channel{
 			Title:          "Vietnam News",
 			Link:           v.Config.Domains.Antara,
@@ -52,8 +51,9 @@ func (v *VietnamScraper) CollectorSetup() *colly.Collector {
 					Link:        v.Config.PermittedURLs.Vietnam[0] + h.ChildAttr("div.box-stream-content h2 a", "href"),
 					Description: h.ChildText("div.box-stream-content p"),
 					PubDate:     time.Now(),
-					MediaThumbnail: entities.MediaThumbnail{
-						URL: h.ChildAttr("a.box-stream-link-with-avatar img", "src"),
+					Enclosure: entities.Enclosure{
+						URL:  h.ChildAttr("a.box-stream-link-with-avatar img", "src"),
+						Type: "image/jpg",
 					},
 				}
 			)

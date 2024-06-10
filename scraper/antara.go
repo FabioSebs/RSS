@@ -33,8 +33,7 @@ func NewAntaraScraper() WebScraper {
 func (a *AntaraScraper) CollectorSetup() *colly.Collector {
 	// init rss
 	a.RSS = entities.RSS{
-		Version:    "2.0",
-		XMLNSMedia: "http://search.yahoo.com/mrss/",
+		Version: "2.0",
 		Channel: entities.Channel{
 			Title:          "Antara News Jakarta",
 			Link:           a.Config.Domains.Antara,
@@ -52,8 +51,9 @@ func (a *AntaraScraper) CollectorSetup() *colly.Collector {
 				Link:        h.ChildAttr("div.col-md-7 div.card__post__body div.card__post__content div.card__post__title h2.post_title a", "href"),
 				Description: h.ChildText("div.col-md-7 div.card__post__body div.card__post__content p"),
 				PubDate:     time.Now(),
-				MediaThumbnail: entities.MediaThumbnail{
-					URL: "https://cdn.antaranews.com/cache/1200x800/2019/01/Logo-LKBN-Antara_fea.png",
+				Enclosure: entities.Enclosure{
+					URL:  h.ChildAttr("div.col-md-5 div.card__post__transition a img", "data-src"),
+					Type: "image/jpg",
 				}}
 
 			a.RSS.Channel.Items = append(a.RSS.Channel.Items, item)

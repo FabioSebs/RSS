@@ -32,7 +32,7 @@ func main() {
 	go jobs.RunScraper()
 
 	// any other process
-	// scraper := scraper.NewThailandScraper()
+	// scraper := scraper.NewAntaraScraper()
 	// scraper.LaunchScraper(scraper.CollectorSetup())
 
 	// main thread is waiting for os interrupt aka context cancel

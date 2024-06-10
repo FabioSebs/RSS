@@ -32,8 +32,7 @@ func NewThailandScraper() WebScraper {
 
 func (t *ThailandScraper) CollectorSetup() *colly.Collector {
 	t.RSS = entities.RSS{
-		Version:    "2.0",
-		XMLNSMedia: "http://search.yahoo.com/mrss/",
+		Version: "2.0",
 		Channel: entities.Channel{
 			Title:          "Thailand News",
 			Link:           t.Config.Domains.Thailand,
@@ -52,8 +51,9 @@ func (t *ThailandScraper) CollectorSetup() *colly.Collector {
 					Link:        h.ChildAttr("a", "href"),
 					Description: "News",
 					PubDate:     time.Now(),
-					MediaThumbnail: entities.MediaThumbnail{
-						URL: h.ChildAttr("a img", "src"),
+					Enclosure: entities.Enclosure{
+						URL:  h.ChildAttr("a.post-thumb img", "data-src"),
+						Type: "image/png",
 					},
 				}
 			)
