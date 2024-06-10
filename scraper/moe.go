@@ -3,7 +3,6 @@ package scraper
 import (
 	"encoding/xml"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
@@ -17,6 +16,8 @@ type MoeScraper struct {
 	Collector    *colly.Collector
 	Config       config.Config
 	RSSGenerator generator.RSSGenerator
+	RSS          entities.RSS
+	RSSitems     entities.Item
 	// Logger    logger.Logger
 }
 
@@ -34,42 +35,37 @@ func NewMoeScraper() WebScraper {
 }
 
 func (g *MoeScraper) CollectorSetup() *colly.Collector {
-	g.Collector.OnHTML("div.container", func(element *colly.HTMLElement) {
-		var (
-			pubTime time.Time = time.Now()
 
-			rss entities.RSS = entities.RSS{
-				Version: "2.0",
-				Channel: entities.Channel{
-					Title:          "Ministry of Energy",
-					Link:           g.Config.Domains.MoE,
-					Description:    "Reports",
-					ManagingEditor: g.Config.ICCTAuthor,
-					PubDate:        pubTime,
-					Items:          nil, // needs scraping
-				},
-			}
-		)
+	g.RSS = entities.RSS{
+		Version: "2.0",
+		Channel: entities.Channel{
+			Title:          "Ministry of Energy",
+			Link:           g.Config.Domains.MoE,
+			Description:    "Reports",
+			ManagingEditor: g.Config.ICCTAuthor,
+			PubDate:        time.Now(),
+			Items:          nil, // needs scraping
+		},
+	}
 
+	g.Collector.OnHTML("div.container div.list-berita", func(element *colly.HTMLElement) {
 		// scraper logic goes here
-		element.ForEach("div.list-berita div.col-md-4 div.berita-item", func(i int, h *colly.HTMLElement) {
+		element.ForEach(" div.col-md-4 div.berita-item", func(i int, h *colly.HTMLElement) {
 			var (
-				item entities.Item = entities.Item{
+				item = entities.Item{
 					Title:       h.ChildText("h4.title"),
 					Link:        h.ChildAttr("a.btn-download", "href"),
 					Description: h.ChildText("p.post-time"),
 					PubDate:     time.Now(),
+					Enclosure: entities.Enclosure{
+						URL:  "https://www.esdm.go.id" + h.ChildAttr("img", "src"),
+						Type: "image/jpg",
+					},
 				}
 			)
 
-			rss.Channel.Items = append(rss.Channel.Items, item)
+			g.RSS.Channel.Items = append(g.RSS.Channel.Items, item)
 		})
-
-		if len(rss.Channel.Items) > 0 {
-			if err := g.WriteXML(rss); err != nil {
-				log.Fatal(err)
-			}
-		}
 	})
 
 	// Request Feedback
@@ -123,4 +119,8 @@ func (g *MoeScraper) LaunchScraper(collector *colly.Collector) {
 	}
 	// Ensuring that the scraping process completes before the program exits
 	collector.Wait()
+
+	if len(g.RSS.Channel.Items) > 1 {
+		g.WriteXML(g.RSS)
+	}
 }

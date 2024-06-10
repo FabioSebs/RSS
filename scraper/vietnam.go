@@ -35,7 +35,7 @@ func (v *VietnamScraper) CollectorSetup() *colly.Collector {
 		Version: "2.0",
 		Channel: entities.Channel{
 			Title:          "Vietnam News",
-			Link:           v.Config.Domains.Antara,
+			Link:           v.Config.Domains.Vietnam,
 			Description:    "News",
 			ManagingEditor: v.Config.ICCTAuthor,
 			PubDate:        time.Now(),

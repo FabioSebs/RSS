@@ -3,7 +3,6 @@ package jobs
 import (
 	"time"
 
-	"github.com/FabioSebs/RSS/httpclient"
 	"github.com/FabioSebs/RSS/scheduler"
 	"github.com/FabioSebs/RSS/scraper"
 )
@@ -21,8 +20,17 @@ func LaunchAllScrapers() {
 	moe := scraper.NewMoeScraper()
 	moe.LaunchScraper(moe.CollectorSetup())
 
-	reg := scraper.NewRegScraper()
-	reg.LaunchScraper(reg.CollectorSetup())
+	// reg := scraper.NewRegScraper()
+	// reg.LaunchScraper(reg.CollectorSetup())
 
-	httpclient.SendRequestForEmail()
+	viet := scraper.NewVietnamScraper()
+	viet.LaunchScraper(viet.CollectorSetup())
+
+	thailand := scraper.NewThailandScraper()
+	thailand.LaunchScraper(thailand.CollectorSetup())
+
+	antara := scraper.NewAntaraScraper()
+	antara.LaunchScraper(antara.CollectorSetup())
+
+	// httpclient.SendRequestForEmail()
 }

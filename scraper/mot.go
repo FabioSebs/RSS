@@ -17,6 +17,8 @@ type MoTScraper struct {
 	Collector    *colly.Collector
 	Config       config.Config
 	RSSGenerator generator.RSSGenerator
+	RSS          entities.RSS
+	RSSitems     entities.Item
 }
 
 func NewMoTScraper() WebScraper {
@@ -34,24 +36,21 @@ func NewMoTScraper() WebScraper {
 }
 
 func (g *MoTScraper) CollectorSetup() *colly.Collector {
+
+	g.RSS = entities.RSS{
+		Version: "2.0",
+		Channel: entities.Channel{
+			Title:          "Ministry of Transportation",
+			Link:           g.Config.Domains.MoT,
+			Description:    "Reports",
+			ManagingEditor: g.Config.ICCTAuthor,
+			PubDate:        time.Now(),
+			Items:          nil, // needs scraping
+		},
+	}
+
 	g.Collector.OnHTML("div.widget ul.comments-list", func(element *colly.HTMLElement) {
-		var (
-			pubTime time.Time = time.Now()
 
-			rss entities.RSS = entities.RSS{
-				Version: "2.0",
-				Channel: entities.Channel{
-					Title:          "Ministry of Transportation",
-					Link:           g.Config.Domains.MoT,
-					Description:    "Reports",
-					ManagingEditor: g.Config.ICCTAuthor,
-					PubDate:        pubTime,
-					Items:          nil, // needs scraping
-				},
-			}
-		)
-
-		// add items to rss / scrape data
 		element.ForEach("li", func(i int, h *colly.HTMLElement) {
 			var (
 				item entities.Item = entities.Item{
@@ -59,17 +58,15 @@ func (g *MoTScraper) CollectorSetup() *colly.Collector {
 					Link:        h.ChildAttr("h3 a", "href"),
 					Description: h.ChildText("small"),
 					PubDate:     time.Now(),
+					Enclosure: entities.Enclosure{
+						URL:  h.ChildAttr("div.alignleft a img", "src"),
+						Type: "image/jpg",
+					},
 				}
 			)
 
-			rss.Channel.Items = append(rss.Channel.Items, item)
+			g.RSS.Channel.Items = append(g.RSS.Channel.Items, item)
 		})
-
-		if len(rss.Channel.Items) > 0 {
-			if err := g.WriteXML(rss); err != nil {
-				log.Fatal(err)
-			}
-		}
 	})
 
 	// Request Feedback
@@ -124,4 +121,10 @@ func (g *MoTScraper) LaunchScraper(collector *colly.Collector) {
 	}
 	// Ensuring that the scraping process completes before the program exits
 	collector.Wait()
+
+	if len(g.RSS.Channel.Items) > 0 {
+		if err := g.WriteXML(g.RSS); err != nil {
+			log.Fatal(err)
+		}
+	}
 }

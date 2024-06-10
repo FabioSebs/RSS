@@ -32,10 +32,12 @@ func main() {
 	go jobs.RunScraper()
 
 	// // any other process
-	// scraper := scraper.NewVietnamScraper()
-	// scraper.LaunchScraper(scraper.CollectorSetup())
+	// s := scraper.NewMoTScraper()
+	// s.LaunchScraper(s.CollectorSetup())
+
+	// scraper2 := scraper.NewMoeScraper()
+	// scraper2.LaunchScraper(scraper2.CollectorSetup())
 
 	// main thread is waiting for os interrupt aka context cancel
 	<-ctx.Done()
-
 }
