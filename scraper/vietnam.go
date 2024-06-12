@@ -10,6 +10,7 @@ import (
 	"github.com/FabioSebs/RSS/config"
 	"github.com/FabioSebs/RSS/entities"
 	"github.com/FabioSebs/RSS/generator"
+	"github.com/FabioSebs/RSS/utils"
 	"github.com/gocolly/colly"
 )
 
@@ -57,8 +58,9 @@ func (v *VietnamScraper) CollectorSetup() *colly.Collector {
 					},
 				}
 			)
-
-			v.RSS.Channel.Items = append(v.RSS.Channel.Items, item)
+			if utils.ValidateTitle(item.Title) {
+				v.RSS.Channel.Items = append(v.RSS.Channel.Items, item)
+			}
 		})
 	})
 

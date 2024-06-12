@@ -10,6 +10,7 @@ import (
 	"github.com/FabioSebs/RSS/config"
 	"github.com/FabioSebs/RSS/entities"
 	"github.com/FabioSebs/RSS/generator"
+	"github.com/FabioSebs/RSS/utils"
 	"github.com/gocolly/colly"
 )
 
@@ -64,8 +65,9 @@ func (g *MoTScraper) CollectorSetup() *colly.Collector {
 					},
 				}
 			)
-
-			g.RSS.Channel.Items = append(g.RSS.Channel.Items, item)
+			if utils.ValidateTitle(item.Title) {
+				g.RSS.Channel.Items = append(g.RSS.Channel.Items, item)
+			}
 		})
 	})
 

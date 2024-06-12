@@ -66,3 +66,5 @@ I am using my server so far as the web server / url we need to feed to our RSS R
 - https://en.antaranews.com/latest-news (jakarta)
 - https://apnews.com/hub/thailand-government (thailand)
 
+
+## For some pictures <!-- add XMLNSMedia: "http://search.yahoo.com/mrss/" -->

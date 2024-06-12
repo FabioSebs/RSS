@@ -10,6 +10,7 @@ import (
 	"github.com/FabioSebs/RSS/config"
 	"github.com/FabioSebs/RSS/entities"
 	"github.com/FabioSebs/RSS/generator"
+	"github.com/FabioSebs/RSS/utils"
 	"github.com/gocolly/colly"
 )
 
@@ -56,7 +57,10 @@ func (a *AntaraScraper) CollectorSetup() *colly.Collector {
 					Type: "image/jpg",
 				}}
 
-			a.RSS.Channel.Items = append(a.RSS.Channel.Items, item)
+			if utils.ValidateTitle(item.Title) {
+				a.RSS.Channel.Items = append(a.RSS.Channel.Items, item)
+			}
+
 		})
 	})
 
