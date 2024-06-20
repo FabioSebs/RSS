@@ -77,11 +77,13 @@ func GetAllowedDomains() entities.PermittedURLs {
 
 func GetFilenames() entities.Filenames {
 	return entities.Filenames{
-		MoE:      "moe.xml",
-		MoT:      "mot.xml",
-		ReG:      "reg.xml",
-		Antara:   "antara.xml",
-		Vietnam:  "vietnam.xml",
-		Thailand: "thailand.xml",
+		MoE:        "moe.xml",
+		MoEEnglish: "moe_en.xml",
+		MoT:        "mot.xml",
+		MoTEnglish: "mot_en.xml",
+		ReG:        "reg.xml",
+		Antara:     "antara.xml",
+		Vietnam:    "vietnam.xml",
+		Thailand:   "thailand.xml",
 	}
 }

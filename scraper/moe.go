@@ -10,6 +10,7 @@ import (
 	"github.com/FabioSebs/RSS/entities"
 	"github.com/FabioSebs/RSS/generator"
 	"github.com/FabioSebs/RSS/utils"
+	gtranslate "github.com/gilang-as/google-translate"
 	"github.com/gocolly/colly"
 )
 
@@ -19,10 +20,11 @@ type MoeScraper struct {
 	RSSGenerator generator.RSSGenerator
 	RSS          entities.RSS
 	RSSitems     entities.Item
+	English      bool
 	// Logger    logger.Logger
 }
 
-func NewMoeScraper() WebScraper {
+func NewMoeScraper(english bool) WebScraper {
 	env := config.NewConfig()
 	return &MoeScraper{
 		Collector: colly.NewCollector(colly.AllowedDomains(
@@ -64,6 +66,19 @@ func (g *MoeScraper) CollectorSetup() *colly.Collector {
 					},
 				}
 			)
+
+			if g.English {
+				titleTrans, err := gtranslate.Translator(gtranslate.Translate{
+					Text: item.Title,
+					//From: "id",
+					To: "en",
+				})
+				if err != nil {
+					fmt.Println(err.Error())
+				}
+				item.Title = titleTrans.Text
+			}
+
 			if utils.ValidateTitle(item.Title) {
 				g.RSS.Channel.Items = append(g.RSS.Channel.Items, item)
 			}

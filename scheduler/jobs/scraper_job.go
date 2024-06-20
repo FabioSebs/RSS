@@ -14,11 +14,17 @@ func RunScraper() {
 }
 
 func LaunchAllScrapers() {
-	mot := scraper.NewMoTScraper()
+	mot := scraper.NewMoTScraper(true)
 	mot.LaunchScraper(mot.CollectorSetup())
 
-	moe := scraper.NewMoeScraper()
+	mot2 := scraper.NewMoTScraper(false)
+	mot2.LaunchScraper(mot.CollectorSetup())
+
+	moe := scraper.NewMoeScraper(true)
 	moe.LaunchScraper(moe.CollectorSetup())
+
+	moe2 := scraper.NewMoeScraper(false)
+	moe2.LaunchScraper(moe.CollectorSetup())
 
 	// reg := scraper.NewRegScraper()
 	// reg.LaunchScraper(reg.CollectorSetup())

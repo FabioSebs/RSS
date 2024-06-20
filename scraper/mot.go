@@ -11,6 +11,7 @@ import (
 	"github.com/FabioSebs/RSS/entities"
 	"github.com/FabioSebs/RSS/generator"
 	"github.com/FabioSebs/RSS/utils"
+	gtranslate "github.com/gilang-as/google-translate"
 	"github.com/gocolly/colly"
 )
 
@@ -20,9 +21,10 @@ type MoTScraper struct {
 	RSSGenerator generator.RSSGenerator
 	RSS          entities.RSS
 	RSSitems     entities.Item
+	English      bool
 }
 
-func NewMoTScraper() WebScraper {
+func NewMoTScraper(english bool) WebScraper {
 	var (
 		env config.Config = config.NewConfig()
 	)
@@ -33,6 +35,7 @@ func NewMoTScraper() WebScraper {
 		)),
 		Config:       env,
 		RSSGenerator: generator.NewRssGenerator(),
+		English:      english,
 	}
 }
 
@@ -65,6 +68,20 @@ func (g *MoTScraper) CollectorSetup() *colly.Collector {
 					},
 				}
 			)
+
+			if g.English {
+				titleTrans, err := gtranslate.Translator(gtranslate.Translate{
+					Text: item.Title,
+					//From: "id",
+					To: "en",
+				})
+				if err != nil {
+					fmt.Println(err.Error())
+				}
+
+				item.Title = titleTrans.Text
+			}
+
 			if utils.ValidateTitle(item.Title) {
 				g.RSS.Channel.Items = append(g.RSS.Channel.Items, item)
 			}
@@ -89,6 +106,10 @@ func (g *MoTScraper) WriteXML(rss entities.RSS) error {
 	var (
 		filename string = fmt.Sprintf("xml/%s", g.Config.Filenames.MoT)
 	)
+
+	if g.English {
+		filename = fmt.Sprintf("xml/%s", g.Config.Filenames.MoTEnglish)
+	}
 
 	output, err := xml.MarshalIndent(rss, "", "  ")
 	if err != nil {

@@ -33,14 +33,14 @@ func main() {
 	go jobs.RunScraper()
 
 	// any other process
-	s := scraper.NewMoTScraper()
-	s.LaunchScraper(s.CollectorSetup())
+	// s := scraper.NewMoTScraper()
+	// s.LaunchScraper(s.CollectorSetup())
 
 	// scraper2 := scraper.NewMoeScraper()
 	// scraper2.LaunchScraper(scraper2.CollectorSetup())
 
-	// scraper3 := scraper.NewMoTScraper()
-	// scraper3.LaunchScraper(scraper3.CollectorSetup())
+	scraper3 := scraper.NewMoTScraper(true)
+	scraper3.LaunchScraper(scraper3.CollectorSetup())
 
 	// scraper4 := scraper.NewThailandScraper()
 	// scraper4.LaunchScraper(scraper4.CollectorSetup())

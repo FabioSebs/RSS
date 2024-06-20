@@ -22,10 +22,12 @@ type PermittedURLs struct {
 }
 
 type Filenames struct {
-	MoE      string
-	MoT      string
-	ReG      string
-	Antara   string
-	Vietnam  string
-	Thailand string
+	MoE        string
+	MoEEnglish string
+	MoT        string
+	MoTEnglish string
+	ReG        string
+	Antara     string
+	Vietnam    string
+	Thailand   string
 }
