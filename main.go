@@ -39,7 +39,7 @@ func main() {
 	// scraper2 := scraper.NewMoeScraper()
 	// scraper2.LaunchScraper(scraper2.CollectorSetup())
 
-	scraper3 := scraper.NewMoTScraper(true)
+	scraper3 := scraper.NewMoeScraper(false)
 	scraper3.LaunchScraper(scraper3.CollectorSetup())
 
 	// scraper4 := scraper.NewThailandScraper()

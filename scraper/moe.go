@@ -3,6 +3,7 @@ package scraper
 import (
 	"encoding/xml"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -33,6 +34,7 @@ func NewMoeScraper(english bool) WebScraper {
 		)),
 		Config:       env,
 		RSSGenerator: generator.NewRssGenerator(),
+		English:      english,
 		// Logger: logger.NewLogger(),
 	}
 }
@@ -77,12 +79,18 @@ func (g *MoeScraper) CollectorSetup() *colly.Collector {
 					fmt.Println(err.Error())
 				}
 				item.Title = titleTrans.Text
+
+				if utils.ValidateTitle(item.Title) {
+					g.RSS.Channel.Items = append(g.RSS.Channel.Items, item)
+				}
 			}
 
-			if utils.ValidateTitle(item.Title) {
+			if utils.ValidateTitleID(item.Title) {
 				g.RSS.Channel.Items = append(g.RSS.Channel.Items, item)
 			}
+
 		})
+
 	})
 
 	// Request Feedback
@@ -102,6 +110,10 @@ func (g *MoeScraper) WriteXML(rss entities.RSS) error {
 	var (
 		filename string = fmt.Sprintf("xml/%s", g.Config.Filenames.MoE)
 	)
+
+	if g.English {
+		filename = fmt.Sprintf("xml/%s", g.Config.Filenames.MoEEnglish)
+	}
 
 	output, err := xml.MarshalIndent(rss, "", "  ")
 	if err != nil {
@@ -137,7 +149,8 @@ func (g *MoeScraper) LaunchScraper(collector *colly.Collector) {
 	// Ensuring that the scraping process completes before the program exits
 	collector.Wait()
 
-	if len(g.RSS.Channel.Items) > 1 {
-		g.WriteXML(g.RSS)
+	if err := g.WriteXML(g.RSS); err != nil {
+		log.Fatal(err)
 	}
+
 }
