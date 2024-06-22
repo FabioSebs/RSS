@@ -3,6 +3,7 @@ package jobs
 import (
 	"time"
 
+	"github.com/FabioSebs/RSS/httpclient"
 	"github.com/FabioSebs/RSS/scheduler"
 	"github.com/FabioSebs/RSS/scraper"
 )
@@ -38,5 +39,5 @@ func LaunchAllScrapers() {
 	antara := scraper.NewAntaraScraper()
 	antara.LaunchScraper(antara.CollectorSetup())
 
-	// httpclient.SendRequestForEmail()
+	httpclient.SendRequestForEmail()
 }
