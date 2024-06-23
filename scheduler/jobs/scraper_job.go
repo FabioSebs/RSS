@@ -10,7 +10,7 @@ import (
 
 func RunScraper() {
 	scheduler := scheduler.NewScheduler()
-	scheduler.CreateJob(time.Minute*3, LaunchAllScrapers)
+	scheduler.CreateJob(time.Hour*200, LaunchAllScrapers)
 	scheduler.Start()
 }
 
