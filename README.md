@@ -84,11 +84,11 @@
 
 ## Solutions
 
-- using a rss reader like Feedly!
-- creating a scraper that generates the xml for every news source!
-- create a scheduler that updates the xml on a timely basis!
-- creating an email service with all members list in an excel file!
-- using google translate api to translate our news titles!
+- using a rss reader like Feedly! ✅
+- creating a scraper that generates the xml for every news source! ✅
+- create a scheduler that updates the xml on a timely basis! ✅
+- creating an email service with all members list in an excel file! ✅
+- using google translate api to translate our news titles! ✅
 
 ## Methodology
 
@@ -109,9 +109,8 @@
 
 I am using my server so far as the web server to expose the RSS to Feedly. Here is a video demonstration!
 
-- One stop place for our web data!
-- Collobaritively view the web data!
-- Append more sites for more web data!
+- https://drive.google.com/file/d/1BNvrVyOnaA1rgin0W6F5xDTgmcR0rcKs/view?usp=drive_link
+
 
 > Example of the RSS Endpoint: https://fabrzy.dev/icct/v1/icct/moe/xml
 
